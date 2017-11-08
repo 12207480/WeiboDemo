@@ -82,6 +82,7 @@
         }
         break;
     }
+    _verifiedImage = [UIImage imageNamed:self.verifiedImageUrl];
     _verified_type=verified_type;
 }
 @end

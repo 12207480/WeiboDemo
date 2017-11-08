@@ -122,11 +122,11 @@
     
     [_imgAvatarView sd_setImageWithURL:[NSURL URLWithString:userModel.profile_image_url] placeholderImage:nil options:SDWebImageLowPriority];
     
-    _imgAvatarType.image=[UIImage imageNamed:userModel.verifiedImageUrl];
+    _imgAvatarType.image=userModel.verifiedImage;
     _labUserName.text=userModel.name;
     _labUserName.width = userModel.nameWidth;
     _imgVip.left=_labUserName.right+3;
-    _imgVip.image=[UIImage imageNamed:_homeCellViewModel.mlevelImageUrl];
+    _imgVip.image=_homeCellViewModel.mlevelImage;
     
     _btnUserScreenName.width=_labUserName.width+_imgVip.width;
     _labReleaseTime.text=_homeCellViewModel.timestamp;

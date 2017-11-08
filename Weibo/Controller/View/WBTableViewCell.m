@@ -8,7 +8,7 @@
 
 #import "WBTableViewCell.h"
 #import "WBHeadView.h"
-#import "TYAttributedLabel.h"
+#import "TYLabel.h"
 #import "WBContentImageView.h"
 #import "WBBottomView.h"
 #import "WBButton.h"
@@ -16,13 +16,13 @@
 #define CELL_HEADVIEW_HEIGHT 54.0    //头部高度
 #define CELL_BOTTOM_HEIGHT   50.0    //底部固定高度
 
-@interface WBTableViewCell()<TYAttributedLabelDelegate>
+@interface WBTableViewCell()<TYLabelDelegate>
 {
     WBHeadView *_headView;//头部view
-    TYAttributedLabel *_contentAttributedLabel;//自身内容
+    TYLabel *_contentAttributedLabel;//自身内容
     
     UIView *_retweetedView;//被转发的view
-    TYAttributedLabel *_retweetedAttributedLabel;//被转发的内容view
+    TYLabel *_retweetedAttributedLabel;//被转发的内容view
     
     
     WBContentImageView *_contentImageView;//图片view
@@ -54,21 +54,17 @@
     _headView.backgroundColor=[UIColor whiteColor];
     [self.contentView addSubview:_headView];
     
-    _contentAttributedLabel=[[TYAttributedLabel alloc]init];
+    _contentAttributedLabel=[[TYLabel alloc]init];
     _contentAttributedLabel.delegate=self;
-    _contentAttributedLabel.highlightedLinkBackgroundColor=nil;
-    _contentAttributedLabel.highlightedLinkColor=[UIColor redColor];
     [self.contentView addSubview:_contentAttributedLabel];
     
     _retweetedView=[[UIView alloc]init];
     _retweetedView.backgroundColor=RGBCOLOR(248,248,248);
     [self.contentView addSubview:_retweetedView];
     
-    _retweetedAttributedLabel=[[TYAttributedLabel alloc]init];
+    _retweetedAttributedLabel=[[TYLabel alloc]init];
     _retweetedAttributedLabel.backgroundColor=RGBCOLOR(248,248,248);
     _retweetedAttributedLabel.delegate=self;
-    _retweetedAttributedLabel.highlightedLinkBackgroundColor=nil;
-    _retweetedAttributedLabel.highlightedLinkColor=[UIColor redColor];
     [self.contentView addSubview:_retweetedAttributedLabel];
     
     
@@ -175,8 +171,8 @@
 {
     WBHomeCellViewModel *retweetedViewModel=_homeCellViewModel.statusModel.retweeted_status;
     
-    [_contentAttributedLabel  setTextContainer:_homeCellViewModel.textContainer];
-    [_retweetedAttributedLabel setTextContainer:retweetedViewModel.textContainer];
+    [_contentAttributedLabel  setTextRender:_homeCellViewModel.textContainer];
+    [_retweetedAttributedLabel setTextRender:retweetedViewModel.textContainer];
     
     if(retweetedViewModel!=nil)
     {
@@ -193,8 +189,8 @@
 ////////////////////////////////////////////////////////
 -(void)drawClear
 {
-    [_retweetedAttributedLabel setTextContainer:nil];
-    [_contentAttributedLabel setTextContainer:nil];
+    [_retweetedAttributedLabel setTextRender:nil];
+    [_contentAttributedLabel setTextRender:nil];
     _contentImageView.urlArray=nil;
 }
 
@@ -248,35 +244,35 @@
     return height;
 }
 
--(void)attributedLabel:(TYAttributedLabel *)attributedLabel textStorageClicked:(id<TYTextStorageProtocol>)textStorage atPoint:(CGPoint)point
-{
-    if ([textStorage isKindOfClass:[TYLinkTextStorage class]])
-    {
-        NSString *linkStr = ((TYLinkTextStorage*)textStorage).linkData;
-        
-        if ([linkStr hasPrefix:PROTOCOL_AT_SOMEONE])
-        {
-            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"点击提示" message:linkStr delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
-            [alertView show];
-        }
-        else if([linkStr hasPrefix:PROTOCOL_SHARP_TREND])
-        {
-            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"点击提示" message:linkStr delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
-            [alertView show];
-        }else if ([linkStr hasPrefix:PROTOCOL_HTTP_URL])
-        {
-            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"点击提示" message:linkStr delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
-            [alertView show];
-        }
-    }
-    else if ([textStorage isKindOfClass:[TYViewStorage class]])
-    {
-        TYViewStorage *viewStorage=(TYViewStorage *)textStorage;
-        WBButton*button=(WBButton *)viewStorage.view;
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"点击提示" message:button.content delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
-        [alertView show];
-    }
-}
+//-(void)attributedLabel:(TYAttributedLabel *)attributedLabel textStorageClicked:(id<TYTextStorageProtocol>)textStorage atPoint:(CGPoint)point
+//{
+//    if ([textStorage isKindOfClass:[TYLinkTextStorage class]])
+//    {
+//        NSString *linkStr = ((TYLinkTextStorage*)textStorage).linkData;
+//
+//        if ([linkStr hasPrefix:PROTOCOL_AT_SOMEONE])
+//        {
+//            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"点击提示" message:linkStr delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+//            [alertView show];
+//        }
+//        else if([linkStr hasPrefix:PROTOCOL_SHARP_TREND])
+//        {
+//            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"点击提示" message:linkStr delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+//            [alertView show];
+//        }else if ([linkStr hasPrefix:PROTOCOL_HTTP_URL])
+//        {
+//            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"点击提示" message:linkStr delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+//            [alertView show];
+//        }
+//    }
+//    else if ([textStorage isKindOfClass:[TYViewStorage class]])
+//    {
+//        TYViewStorage *viewStorage=(TYViewStorage *)textStorage;
+//        WBButton*button=(WBButton *)viewStorage.view;
+//        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"点击提示" message:button.content delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+//        [alertView show];
+//    }
+//}
 
 //-(void)attributedLabel:(TYAttributedLabel *)attributedLabel textStorageLongPressed:(id<TYTextStorageProtocol>)textStorage onState:(UIGestureRecognizerState)state atPoint:(CGPoint)point
 //{
@@ -284,10 +280,10 @@
 //}
 
 
--(void)awakeFromNib
-{
-    // Initialization code
-}
+//-(void)awakeFromNib
+//{
+//    // Initialization code
+//}
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

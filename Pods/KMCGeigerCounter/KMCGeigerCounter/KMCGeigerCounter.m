@@ -19,7 +19,7 @@
 static NSTimeInterval const kNormalFrameDuration = 1.0 / kHardwareFramesPerSecond;
 
 @interface KMCGeigerCounter () {
-    CFTimeInterval _recentFrameTimes[kHardwareFramesPerSecond];
+    CFTimeInterval _lastSecondOfFrameTimes[kHardwareFramesPerSecond];
 }
 
 @property (nonatomic, readwrite, getter = isRunning) BOOL running;
@@ -53,20 +53,20 @@ static NSTimeInterval const kNormalFrameDuration = 1.0 / kHardwareFramesPerSecon
 
 - (CFTimeInterval)lastFrameTime
 {
-    return _recentFrameTimes[self.frameNumber % kHardwareFramesPerSecond];
+    return _lastSecondOfFrameTimes[self.frameNumber % kHardwareFramesPerSecond];
 }
 
 - (void)recordFrameTime:(CFTimeInterval)frameTime
 {
     ++self.frameNumber;
-    _recentFrameTimes[self.frameNumber % kHardwareFramesPerSecond] = frameTime;
+    _lastSecondOfFrameTimes[self.frameNumber % kHardwareFramesPerSecond] = frameTime;
 }
 
 - (void)clearLastSecondOfFrameTimes
 {
     CFTimeInterval initialFrameTime = CACurrentMediaTime();
     for (NSInteger i = 0; i < kHardwareFramesPerSecond; ++i) {
-        _recentFrameTimes[i] = initialFrameTime;
+        _lastSecondOfFrameTimes[i] = initialFrameTime;
     }
     self.frameNumber = 0;
 }
@@ -104,8 +104,6 @@ static NSTimeInterval const kNormalFrameDuration = 1.0 / kHardwareFramesPerSecon
 
 - (void)displayLinkWillDraw:(CADisplayLink *)displayLink
 {
-    // printf("%ld \t%f \t%f\n", self.frameNumber % 60, [NSDate date].timeIntervalSince1970 * 60, displayLink.timestamp * 60);
-
     CFTimeInterval currentFrameTime = displayLink.timestamp;
     CFTimeInterval frameDuration = currentFrameTime - [self lastFrameTime];
 
@@ -134,18 +132,11 @@ static NSTimeInterval const kNormalFrameDuration = 1.0 / kHardwareFramesPerSecon
     [self clearLastSecondOfFrameTimes];
 
     // Low framerates can be caused by CPU activity on the main thread or by long compositing time in (I suppose)
-    // the graphics driver. If compositing time is the problem, and it doesn't require a lot of main thread activity
+    // the graphics driver. If compositing time is the problem, and it doesn't require on any main thread activity
     // between frames, then the framerate can drop without CADisplayLink detecting it.
     // Therefore, put an empty 1pt x 1pt SKView in the window. It shouldn't interfere with the framerate, but
     // should cause the CADisplayLink callbacks to match the timing of drawing.
-    // TODO: This should be lightweight but affects the framerate on iOS 9, particularly in the example application.
-    // Maybe if I use only the SKView and not the CADisplayLink?
-    // No, that doesn't help. The SKView alone is causing the drawing latency. The CADisplayLink does not interfere.
-    // SceneKit doens't exist before iOS 8, so I'd prefer not to rely on it.
-    // A GLKViewController works on the default run loop, so it doesn't get updates during core animation scrolling.
-    // Using a custom view with -drawRect: or -displayLayer:, callbacks happen just as often as CADisplayLink.
-    // I need a new way to accurately detect when a frame is drawn to the screen without affecting the framerate.
-    SKScene *scene = [[SKScene alloc] initWithSize:CGSizeMake(1.0, 1.0)];
+    SKScene *scene = [SKScene new];
     self.sceneView = [[SKView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1.0, 1.0)];
     [self.sceneView presentScene:scene];
 
@@ -193,37 +184,30 @@ static NSTimeInterval const kNormalFrameDuration = 1.0 / kHardwareFramesPerSecon
 
 - (void)enable
 {
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = [[UIViewController alloc] init];
+    self.window = [[UIWindow alloc] initWithFrame:[UIApplication sharedApplication].statusBarFrame];
     self.window.windowLevel = self.windowLevel;
     self.window.userInteractionEnabled = NO;
 
     CGFloat const kMeterWidth = 65.0;
     CGFloat xOrigin = 0.0;
-    UIViewAutoresizing autoresizingMask = UIViewAutoresizingFlexibleBottomMargin;
     switch (self.position) {
         case KMCGeigerCounterPositionLeft:
             xOrigin = 0.0;
-            autoresizingMask |= UIViewAutoresizingFlexibleRightMargin;
             break;
         case KMCGeigerCounterPositionMiddle:
             xOrigin = (CGRectGetWidth(self.window.bounds) - kMeterWidth) / 2.0;
-            autoresizingMask |= UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
             break;
         case KMCGeigerCounterPositionRight:
             xOrigin = (CGRectGetWidth(self.window.bounds) - kMeterWidth);
-            autoresizingMask |= UIViewAutoresizingFlexibleLeftMargin;
             break;
     }
     self.meterLabel = [[UILabel alloc] initWithFrame:CGRectMake(xOrigin, 0.0,
-                                                                kMeterWidth, 20.0)];
-    self.meterLabel.autoresizingMask = autoresizingMask;
+                                                                kMeterWidth, CGRectGetHeight(self.window.bounds))];
     self.meterLabel.font = [UIFont boldSystemFontOfSize:12.0];
     self.meterLabel.backgroundColor = [UIColor grayColor];
     self.meterLabel.textColor = [UIColor whiteColor];
     self.meterLabel.textAlignment = NSTextAlignmentCenter;
-    [self.window.rootViewController.view addSubview:self.meterLabel];
-
+    [self.window addSubview:self.meterLabel];
     self.window.hidden = NO;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -278,7 +262,7 @@ static NSTimeInterval const kNormalFrameDuration = 1.0 / kHardwareFramesPerSecon
     static KMCGeigerCounter *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[KMCGeigerCounter alloc] init];
+        instance = [KMCGeigerCounter new];
     });
     return instance;
 }
@@ -308,7 +292,7 @@ static NSTimeInterval const kNormalFrameDuration = 1.0 / kHardwareFramesPerSecon
 
     CFTimeInterval lastFrameTime = CACurrentMediaTime() - kNormalFrameDuration;
     for (NSInteger i = 0; i < kHardwareFramesPerSecond; ++i) {
-        if (1.0 <= lastFrameTime - _recentFrameTimes[i]) {
+        if (1.0 <= lastFrameTime - _lastSecondOfFrameTimes[i]) {
             ++droppedFrameCount;
         }
     }

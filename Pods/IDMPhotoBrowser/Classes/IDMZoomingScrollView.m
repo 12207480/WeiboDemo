@@ -30,8 +30,7 @@
 @synthesize photoImageView = _photoImageView, photoBrowser = _photoBrowser, photo = _photo, captionView = _captionView;
 
 - (id)initWithPhotoBrowser:(IDMPhotoBrowser *)browser {
-    if ((self = [super init]))
-    {
+    if ((self = [super init])) {
         // Delegate
         self.photoBrowser = browser;
         

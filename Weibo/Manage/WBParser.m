@@ -45,6 +45,7 @@ static NSString *urlRegular=@"(http|https)://(t.cn/|weibo.com/)+(([a-zA-Z0-9/])*
     {
         WBKeywordModel *keywordModel=[[WBKeywordModel alloc]init];
         NSString *keyword = [self replacementStringForResult:match inString:string regularExpressionWithPattern:iconRegular];
+        keywordModel.type = 1;
         keywordModel.keyword=keyword;
         keywordModel.range=[match range];
         keywordModel.url = [WBEmotionManage pathForEmotionCode:keyword];
@@ -67,6 +68,7 @@ static NSString *urlRegular=@"(http|https)://(t.cn/|weibo.com/)+(([a-zA-Z0-9/])*
     {
         WBKeywordModel *keywordModel=[[WBKeywordModel alloc]init];
         NSString *keyword =[self replacementStringForResult:match inString:string regularExpressionWithPattern:urlRegular];
+        keywordModel.type = 2;
         keywordModel.keyword=keyword;
         keywordModel.range=[match range];
         keywordModel.url =keyword;//@"网页";

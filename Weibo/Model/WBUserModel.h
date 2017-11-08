@@ -50,6 +50,7 @@
 
 //额外自己加的属性
 @property(copy,nonatomic)NSString *verifiedImageUrl;//认证用户的图片的URl
+@property(strong,nonatomic) UIImage *verifiedImage;
 @property (assign, nonatomic) CGFloat nameWidth;
 
 -(instancetype)initWithJsonDictionary:(NSDictionary *)dic;

@@ -9,8 +9,10 @@
 
 #import <objc/runtime.h>
 
+#import <CoreGraphics/CoreGraphics.h>
 #import <Foundation/Foundation.h>
 
+#import "POPAnimatablePropertyTypes.h"
 #import "POPVector.h"
 
 enum POPValueType
@@ -26,6 +28,8 @@ enum POPValueType
   kPOPValueTransform,
   kPOPValueRange,
   kPOPValueColor,
+  kPOPValueSCNVector3,
+  kPOPValueSCNVector4,
 };
 
 using namespace POP;
@@ -43,12 +47,12 @@ extern POPValueType POPSelectValueType(id obj, const POPValueType *types, size_t
 /**
  Array of all value types.
  */
-extern const POPValueType kPOPAnimatableAllTypes[10];
+extern const POPValueType kPOPAnimatableAllTypes[12];
 
 /**
  Array of all value types supported for animation.
  */
-extern const POPValueType kPOPAnimatableSupportTypes[8];
+extern const POPValueType kPOPAnimatableSupportTypes[10];
 
 /**
  Returns a string description of a value type.
@@ -76,15 +80,9 @@ extern id POPBox(VectorConstRef vec, POPValueType type, bool force = false);
 extern VectorRef POPUnbox(id value, POPValueType &type, NSUInteger &count, bool validate);
 
 /**
- Read/write block typedefs for convenience.
- */
-typedef void(^pop_animatable_read_block)(id obj, CGFloat *value);
-typedef void(^pop_animatable_write_block)(id obj, const CGFloat *value);
-
-/**
  Read object value and return a Vector4r.
  */
-NS_INLINE Vector4r read_values(pop_animatable_read_block read, id obj, size_t count)
+NS_INLINE Vector4r read_values(POPAnimatablePropertyReadBlock read, id obj, size_t count)
 {
   Vector4r vec = Vector4r::Zero();
   if (0 == count)

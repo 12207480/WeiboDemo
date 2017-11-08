@@ -94,6 +94,7 @@
             if (model.retweeted_status!=nil)
             {
                 WBHomeCellViewModel *retweetedViewModel=[[WBHomeCellViewModel alloc]init];
+                retweetedViewModel.isRetweeted = YES;
                 retweetedViewModel.statusModel=model.retweeted_status;
                 model.retweeted_status=retweetedViewModel;
             }

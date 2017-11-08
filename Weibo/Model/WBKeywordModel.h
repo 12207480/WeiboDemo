@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface WBKeywordModel : NSObject
+@property (nonatomic,assign) NSInteger type;//1图片 2链接
 @property (nonatomic,copy)NSString  *keyword;//名称
 @property(nonatomic,copy)NSString    *url;//地址
 @property (nonatomic,assign)NSRange range;//位置

@@ -7,19 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TYTextContainer.h"
+#import "TYTextRender.h"
 
 @interface WBHomeCellViewModel : NSObject
 
+@property(assign,nonatomic) BOOL isRetweeted;
 @property(strong,nonatomic)WBStatusModel *statusModel;
-//@property(strong,nonatomic)NSAttributedString *attributedString;
-@property (nonatomic, strong) TYTextContainer *textContainer;
+@property (nonatomic, strong) TYTextRender *textContainer;
 
 @property(strong,nonatomic)NSArray *emotionArray;//表情数组
 @property(strong,nonatomic)NSArray *atPersonArray;//at
 @property(strong,nonatomic)NSArray *urlArray;//网址数组
 @property(strong,nonatomic)NSArray *topicArray;//话题
 @property(copy,nonatomic)NSString *mlevelImageUrl;//微博等级URl
+@property(strong,nonatomic)UIImage *mlevelImage;
 @property(copy,nonatomic)NSString *timestamp;//时间显示出来的
 
 @property(assign,nonatomic)CGFloat timestampWidth;

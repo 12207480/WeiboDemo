@@ -124,24 +124,17 @@ caption = _caption;
     return _underlyingImage;
 }
 
-- (void)loadUnderlyingImageAndNotify
-{
+- (void)loadUnderlyingImageAndNotify {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     _loadingInProgress = YES;
-    if (self.underlyingImage)
-    {
+    if (self.underlyingImage) {
         // Image already loaded
         [self imageLoadingComplete];
-    }
-    else
-    {
-        if (_photoPath)
-        {
+    } else {
+        if (_photoPath) {
             // Load async from file
             [self performSelectorInBackground:@selector(loadImageFromFileAsync) withObject:nil];
-        }
-        else if (_photoURL)
-        {
+        } else if (_photoURL) {
             // Load async from web (using AFNetworking)
             NSURLRequest *request = [[NSURLRequest alloc] initWithURL:_photoURL
                                                           cachePolicy:NSURLRequestReturnCacheDataElseLoad

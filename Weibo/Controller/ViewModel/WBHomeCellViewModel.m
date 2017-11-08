@@ -9,7 +9,7 @@
 #import "WBHomeCellViewModel.h"
 #import "WBContentImageView.h"
 #import "WBButton.h"
-#import "TYTextContainer.h"
+#import "TYTextRender.h"
 #import "UIImage+ShortCut.h"
 #import "NSString+Size.h"
 
@@ -80,6 +80,7 @@
         }
             break;
     }
+    self.mlevelImage = [UIImage imageNamed:self.mlevelImageUrl];
 }
 
 
@@ -161,87 +162,86 @@
 #pragma 计算高度
 -(void)calculateHegihtAndAttributedString
 {
-    TYTextContainer * textContainer=[[TYTextContainer alloc]init];
-    textContainer.characterSpacing = 0;
-    textContainer.linesSpacing=2;
-    textContainer.lineBreakMode = kCTLineBreakByWordWrapping;
-    textContainer.font = [UIFont systemFontOfSize:17];
-    textContainer.text=self.statusModel.text;
-    
-    //表情
-    for (NSInteger i=0;i<self.emotionArray.count;++i)
-    {
-        WBKeywordModel *keywordModel=[self.emotionArray objectAtIndex:i];
-        
-        TYImageStorage *imageStorage=[[TYImageStorage alloc]init];
-        //imageStorage.imageName = keywordModel.url;
-        //谨慎缓存image，会增长内存
-        imageStorage.image=[[UIImage imageNamed:keywordModel.url] imageScaledToSize:CGSizeMake(19,19)];
-        imageStorage.range=keywordModel.range;
-        imageStorage.size=CGSizeMake(19,19);
-        
-        [textContainer addTextStorage:imageStorage];
-    }
-    
-    
-    //url链接
-    for (NSInteger i=0;i<self.urlArray.count;++i)
-    {
-        WBKeywordModel *keywordModel=[self.urlArray objectAtIndex:i];
-        
-        TYLinkTextStorage *linkTextStorage=[[TYLinkTextStorage alloc]init];
-        linkTextStorage.range=keywordModel.range;
-        linkTextStorage.text=nil;
-        linkTextStorage.linkData=keywordModel.url;
-        linkTextStorage.underLineStyle=kCTUnderlineStyleNone;
-        [textContainer addTextStorage:linkTextStorage];
-
-//        WBButton *btnUrl=[WBButton buttonWithType:UIButtonTypeCustom];
-//        btnUrl.backgroundColor=[UIColor redColor];
-//        [btnUrl setTitle:keywordModel.url forState:UIControlStateNormal];
-//        [btnUrl setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//        [btnUrl setBackgroundImage:[UIImage imageWithColor:[UIColor yellowColor]] forState:UIControlStateHighlighted];
-//        btnUrl.titleLabel.font=[UIFont systemFontOfSize:14.0];
-//        btnUrl.frame=CGRectMake(0,0,44,18);
-//        btnUrl.userInteractionEnabled=NO;
-//        btnUrl.content=keywordModel.keyword;
-//        
-//        TYViewStorage *viewStorage=[[TYViewStorage alloc]init];
-//        viewStorage.view=btnUrl;
-//        viewStorage.range=keywordModel.range;
-//        [textContainer addTextStorage:viewStorage];
-        
-    }
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc]initWithString:self.statusModel.text];
+    text.ty_color = _isRetweeted?RGBCOLOR(93, 93, 93) : RGBCOLOR(51, 51, 51);
     
     //at
     for (NSInteger i=0;i<self.atPersonArray.count;++i)
     {
         WBKeywordModel *keywordModel=[self.atPersonArray objectAtIndex:i];
-        
-        TYLinkTextStorage *linkTextStorage=[[TYLinkTextStorage alloc]init];
-        linkTextStorage.range=keywordModel.range;
-        linkTextStorage.text=nil;
-        linkTextStorage.linkData=keywordModel.url;
-        linkTextStorage.underLineStyle=kCTUnderlineStyleNone;
-        [textContainer addTextStorage:linkTextStorage];
+        TYTextAttribute *textAttribute = [[TYTextAttribute alloc]init];
+        textAttribute.color = RGBCOLOR(82, 126, 173);;
+        TYTextHighlight *linkTextStorage=[[TYTextHighlight alloc]init];
+        linkTextStorage.backgroundColor = RGBCOLOR(191, 223, 254);
+        linkTextStorage.userInfo=@{@"url":keywordModel.url};
+        [text addTextAttribute:textAttribute range:keywordModel.range];
+        [text addTextHighlightAttribute:linkTextStorage range:keywordModel.range];
     }
     
     //话题
     for (NSInteger i=0; i<self.topicArray.count;++i)
     {
         WBKeywordModel *keywordModel=[self.topicArray objectAtIndex:i];
-        
-        TYLinkTextStorage *linkTextStorage=[[TYLinkTextStorage alloc]init];
-        linkTextStorage.range=keywordModel.range;
-        linkTextStorage.text=nil;
-        linkTextStorage.linkData=keywordModel.url;
-        linkTextStorage.underLineStyle=kCTUnderlineStyleNone;
-        [textContainer addTextStorage:linkTextStorage];
+        TYTextAttribute *textAttribute = [[TYTextAttribute alloc]init];
+        textAttribute.color = RGBCOLOR(82, 126, 173);;
+        TYTextHighlight *linkTextStorage=[[TYTextHighlight alloc]init];
+        linkTextStorage.backgroundColor = RGBCOLOR(191, 223, 254);
+        linkTextStorage.userInfo=@{@"url":keywordModel.url};
+        [text addTextAttribute:textAttribute range:keywordModel.range];
+        [text addTextHighlightAttribute:linkTextStorage range:keywordModel.range];
     }
     
-    
-    _textContainer = [textContainer createTextContainerWithTextWidth:Getwidth-CELL_SIDEMARGIN*2];
-    _contentHeight = textContainer.textHeight;
+    //表情
+    for (NSInteger i=self.emotionArray.count-1;i<self.emotionArray.count;--i)
+    {
+        WBKeywordModel *keywordModel=[self.emotionArray objectAtIndex:i];
+        
+        TYTextAttachment *imageStorage=[[TYTextAttachment alloc]init];
+        imageStorage.image=[[UIImage imageNamed:keywordModel.url] imageScaledToSize:CGSizeMake(20,20)];
+        imageStorage.baseline = -4;
+        
+        [text replaceCharactersInRange:keywordModel.range withAttributedString:[NSAttributedString attributedStringWithAttachment:imageStorage]];
+    }
+    //url链接
+    for (NSInteger i=self.urlArray.count-1;i>=0;--i)
+    {
+        WBKeywordModel *keywordModel=[self.urlArray objectAtIndex:i];
+        NSRange range = [text.string rangeOfString:keywordModel.keyword];
+        if (range.length == 0) {
+            continue;
+        }
+        NSMutableAttributedString *att;
+        if (keywordModel.type==1) {
+            att=[[NSMutableAttributedString alloc]initWithString:@"查看图片"];
+            TYTextAttachment *attachment = [[TYTextAttachment alloc]init];
+            attachment.image = [UIImage imageNamed:@"timeline_card_small_photo_default"];
+            attachment.size = CGSizeMake(15, 15);
+            attachment.verticalAlignment = TYTextVerticalAlignmentCenter;
+            [att insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachment] atIndex:0];
+        }else if (keywordModel.type==2) {
+            att=[[NSMutableAttributedString alloc]initWithString:@"网页链接"];
+            TYTextAttachment *attachment = [[TYTextAttachment alloc]init];
+            attachment.image = [UIImage imageNamed:@"timeline_card_small_web_default"];
+            attachment.size = CGSizeMake(15, 15);
+            attachment.baseline = -2;
+            [att insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachment] atIndex:0];
+        }
+        TYTextAttribute *textAttribute = [[TYTextAttribute alloc]init];
+        textAttribute.color = RGBCOLOR(82, 126, 173);
+        TYTextHighlight *linkTextStorage=[[TYTextHighlight alloc]init];
+        linkTextStorage.backgroundColor = RGBCOLOR(191, 223, 254);
+        linkTextStorage.userInfo=@{@"url":keywordModel.url};
+        [att addTextAttribute:textAttribute range:NSMakeRange(0, att.length)];
+        [att addTextHighlightAttribute:linkTextStorage range:NSMakeRange(0, att.length)];
+        [text replaceCharactersInRange:range withAttributedString:att];
+    }
+    text.ty_characterSpacing =0;
+    text.ty_lineSpacing = 1.5;
+    text.ty_font = _isRetweeted ? [UIFont systemFontOfSize:16]:[UIFont systemFontOfSize:17];
+    _textContainer = [[TYTextRender alloc]initWithAttributedText:text];
+    _textContainer.highlightBackgroudInset = UIEdgeInsetsMake(0, 1, 0, 2);
+    _textContainer.size = [_textContainer textSizeWithRenderWidth:Getwidth-CELL_SIDEMARGIN*2];
+    _contentHeight =_textContainer.size.height;
     
     self.atPersonArray=nil;
     self.emotionArray=nil;

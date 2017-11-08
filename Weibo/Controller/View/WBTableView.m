@@ -27,6 +27,10 @@ static NSString *kidentifier=@"WBTableViewCell";
     if (self)
     {
         needLoadArr=[[NSMutableArray alloc]init];
+        self.delaysContentTouches = NO;
+        self.estimatedRowHeight = 0;
+        self.estimatedSectionFooterHeight=0;
+        self.estimatedSectionHeaderHeight=0;
         self.dataSource = self;
         self.delegate = self;
         [self registerClass:[WBTableViewCell class] forCellReuseIdentifier:kidentifier];
@@ -48,7 +52,7 @@ static NSString *kidentifier=@"WBTableViewCell";
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    WBTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:kidentifier];
+    WBTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:kidentifier forIndexPath:indexPath];
     [self drawCell:cell withIndexPath:indexPath];
     return cell;
 }
@@ -67,16 +71,6 @@ static NSString *kidentifier=@"WBTableViewCell";
 {
     WBHomeCellViewModel *homeCellViewModel=[self.weiboArray objectAtIndex:indexPath.row];
     cell.homeCellViewModel=homeCellViewModel;
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//    if (needLoadArr.count>0&&[needLoadArr indexOfObject:indexPath]==NSNotFound)
-//    {
-//        [cell drawClear];
-//        return;
-//    }
-//    if (scrollToToping)
-//    {
-//        return;
-//    }
     [cell drawCell];
 }
 

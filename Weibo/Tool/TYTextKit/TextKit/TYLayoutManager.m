@@ -56,7 +56,6 @@
     CGRect lineBounds = [self lineFragmentUsedRectForGlyphAtIndex:index effectiveRange:NULL];
     lineBounds.origin.x += self.lastDrawPoint.x;
     lineBounds.origin.y += self.lastDrawPoint.y;
-    lineBounds.size.width +=  1;
     CGFloat startDrawY = CGFLOAT_MAX;
     CGFloat maxLineHeight = 0.0f;
     for (NSInteger charIndex = charRange.location; charIndex<NSMaxRange(charRange); ++charIndex) {
@@ -68,8 +67,9 @@
         }
         NSUInteger glyphIndex = [self glyphIndexForCharacterAtIndex:charIndex];
         CGPoint location = [self locationForGlyphAtIndex:glyphIndex];
-        startDrawY = fmin(startDrawY, lineBounds.origin.y+location.y-font.ascender);
-        maxLineHeight = fmax(maxLineHeight, font.lineHeight);
+        CGFloat height = [self attachmentSizeForGlyphAtIndex:glyphIndex].height;
+        startDrawY = fmin(startDrawY, lineBounds.origin.y+location.y-(height > 0 ?height :font.ascender));
+        maxLineHeight = fmax(maxLineHeight, height > 0? height:font.lineHeight);
     }
     lineBounds.origin.y = startDrawY;
     lineBounds.size.height = maxLineHeight;

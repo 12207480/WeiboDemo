@@ -174,6 +174,7 @@
         TYTextHighlight *linkTextStorage=[[TYTextHighlight alloc]init];
         linkTextStorage.backgroundColor = RGBCOLOR(191, 223, 254);
         linkTextStorage.userInfo=@{@"url":keywordModel.url};
+        linkTextStorage.backgroudInset = UIEdgeInsetsMake(1, 0, 1, 1);
         [text addTextAttribute:textAttribute range:keywordModel.range];
         [text addTextHighlightAttribute:linkTextStorage range:keywordModel.range];
     }
@@ -187,6 +188,7 @@
         TYTextHighlight *linkTextStorage=[[TYTextHighlight alloc]init];
         linkTextStorage.backgroundColor = RGBCOLOR(191, 223, 254);
         linkTextStorage.userInfo=@{@"url":keywordModel.url};
+        linkTextStorage.backgroudInset = UIEdgeInsetsMake(1, 0, 1, 1);
         [text addTextAttribute:textAttribute range:keywordModel.range];
         [text addTextHighlightAttribute:linkTextStorage range:keywordModel.range];
     }
@@ -199,7 +201,6 @@
         TYTextAttachment *imageStorage=[[TYTextAttachment alloc]init];
         imageStorage.image=[[UIImage imageNamed:keywordModel.url] imageScaledToSize:CGSizeMake(20,20)];
         imageStorage.baseline = -4;
-        
         [text replaceCharactersInRange:keywordModel.range withAttributedString:[NSAttributedString attributedStringWithAttachment:imageStorage]];
     }
     //url链接
@@ -222,7 +223,7 @@
             att=[[NSMutableAttributedString alloc]initWithString:@"网页链接"];
             TYTextAttachment *attachment = [[TYTextAttachment alloc]init];
             attachment.image = [UIImage imageNamed:@"timeline_card_small_web_default"];
-            attachment.size = CGSizeMake(15, 15);
+            attachment.size = CGSizeMake(16, 16);
             attachment.baseline = -2;
             [att insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachment] atIndex:0];
         }
@@ -231,17 +232,22 @@
         TYTextHighlight *linkTextStorage=[[TYTextHighlight alloc]init];
         linkTextStorage.backgroundColor = RGBCOLOR(191, 223, 254);
         linkTextStorage.userInfo=@{@"url":keywordModel.url};
-        [att addTextAttribute:textAttribute range:NSMakeRange(0, att.length)];
-        [att addTextHighlightAttribute:linkTextStorage range:NSMakeRange(0, att.length)];
         [text replaceCharactersInRange:range withAttributedString:att];
+        [text addTextAttribute:textAttribute range:NSMakeRange(range.location, att.length)];
+        [text addTextHighlightAttribute:linkTextStorage range:NSMakeRange(range.location, att.length)];
     }
     text.ty_characterSpacing =0;
-    text.ty_lineSpacing = 1.5;
+    text.ty_lineSpacing = 2;
     text.ty_font = _isRetweeted ? [UIFont systemFontOfSize:16]:[UIFont systemFontOfSize:17];
+//    text.ty_minimumLineHeight = 16;
+//    text.ty_maximumLineHeight = 16;
+//    text.ty_lineHeightMultiple = 1.0;
     _textContainer = [[TYTextRender alloc]initWithAttributedText:text];
-    _textContainer.highlightBackgroudInset = UIEdgeInsetsMake(0, 1, 0, 2);
+    _textContainer.lineBreakMode = NSLineBreakByCharWrapping;
+    _textContainer.highlightBackgroudRadius = 5;
+    _textContainer.highlightBackgroudInset = UIEdgeInsetsMake(2, 0, 2, 1);
     _textContainer.size = [_textContainer textSizeWithRenderWidth:Getwidth-CELL_SIDEMARGIN*2];
-    _contentHeight =_textContainer.size.height;
+    _contentHeight =_textContainer.size.height+2;
     
     self.atPersonArray=nil;
     self.emotionArray=nil;

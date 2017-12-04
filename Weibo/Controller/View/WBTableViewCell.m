@@ -55,6 +55,7 @@
     [self.contentView addSubview:_headView];
     
     _contentAttributedLabel=[[TYLabel alloc]init];
+    //_contentAttributedLabel.displaysAsynchronously = NO;
     _contentAttributedLabel.delegate=self;
     [self.contentView addSubview:_contentAttributedLabel];
     
@@ -64,6 +65,7 @@
     
     _retweetedAttributedLabel=[[TYLabel alloc]init];
     _retweetedAttributedLabel.backgroundColor=RGBCOLOR(248,248,248);
+    //_retweetedAttributedLabel.displaysAsynchronously = NO;
     _retweetedAttributedLabel.delegate=self;
     [self.contentView addSubview:_retweetedAttributedLabel];
     

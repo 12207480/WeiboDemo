@@ -246,8 +246,9 @@
     _textContainer.lineBreakMode = NSLineBreakByCharWrapping;
     _textContainer.highlightBackgroudRadius = 5;
     _textContainer.highlightBackgroudInset = UIEdgeInsetsMake(2, 0, 2, 1);
-    _textContainer.size = [_textContainer textSizeWithRenderWidth:Getwidth-CELL_SIDEMARGIN*2];
-    _contentHeight =_textContainer.size.height+2;
+    CGFloat width = [UIScreen mainScreen].bounds.size.width-CELL_SIDEMARGIN*2;
+    _textContainer.size = CGSizeMake(width, [_textContainer textSizeWithRenderWidth:width].height);
+    _contentHeight =_textContainer.size.height;
     
     self.atPersonArray=nil;
     self.emotionArray=nil;

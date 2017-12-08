@@ -12,7 +12,7 @@
 static NSString *atRegular = @"@[\u4e00-\u9fa5a-zA-Z0-9_-]{2,30}";//at的正则表达式
 static NSString *sharpRegular = @"#[^#]+#";//话题的正则表达式
 static NSString *iconRegular =  @"(\\[\\w+\\])";//图片的正则表达式
-static NSString *urlRegular=@"(http|https)://(t.cn/|weibo.com/)+(([a-zA-Z0-9/])*)";//网址的正则表达式
+static NSString *urlRegular=@"(http|https)://(t.cn/|weibo.com/|m.weibo.cn/)+(([a-zA-Z0-9/])*)";//网址的正则表达式
 
 
 @implementation WBParser

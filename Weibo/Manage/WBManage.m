@@ -34,14 +34,14 @@
 ///////////////////////////////////////////////////////////
 -(void)requestWeiBo:(NSInteger)tag requestResult:(void (^)(BOOL, NSMutableArray *))requestResult
 {
-    WBSession *session=[[WBSession alloc]init];
+    //WBSession *session=[[WBSession alloc]init];
 //    NSDictionary *dic=@{@"source":kAppKey,@"access_token":session.accessToken,@"since_id":@"0",@"max_id":@"0",@"count":@"200",@"page":[NSString stringWithFormat:@"%zd",tag],@"base_app":@"0",@"feature":@"0",@"trim_user":@"0"};
 //    [WBHttpRequest requestWithAccessToken:session.accessToken url:@"https://api.weibo.com/2/statuses/friends_timeline.json" httpMethod:@"GET" params:dic delegate:self withTag:@"1"];
     
     self.resultHandler=requestResult;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         // 处理耗时操作的代码块...
-        self.resultHandler=requestResult;
+        //self.resultHandler=requestResult;
         NSString *textFileContents = [NSString stringWithContentsOfFile:[[NSBundle mainBundle]
                                                                          pathForResource:@"weiboData" ofType:@"txt"] encoding:NSUTF8StringEncoding error: nil];
         //通知主线程刷新

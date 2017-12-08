@@ -473,6 +473,9 @@ typedef NS_ENUM(NSUInteger, TYUserTouchedState) {
             textRender = [[TYTextRender alloc]initWithTextStorage:textStorage];
             if (isCancelled()) return;
         }
+        if (!textStorage) {
+            return;
+        }
         if (!ignoreAboveRenderRelatePropertys) {
             [self configureTextRender:textRender verticalAlignment:verticalAlignment numberOfLines:numberOfLines lineBreakMode:lineBreakMode];
         }
@@ -493,8 +496,9 @@ typedef NS_ENUM(NSUInteger, TYUserTouchedState) {
             return ;
         }
         NSRange visibleRange = textRender.visibleCharacterRangeOnRender;
+        NSRange truncatedRange = textRender.truncatedCharacterRangeOnRender;
         for (TYTextAttachment *attachment in attachments) {
-            if (NSLocationInRange(attachment.range.location, visibleRange)) {
+            if (NSLocationInRange(attachment.range.location, visibleRange) && (truncatedRange.length == 0 || !NSLocationInRange(attachment.range.location, truncatedRange))) {
                 if (textRender.maximumNumberOfLines > 0 && attachment.range.location != 0 && CGPointEqualToPoint(attachment.position, CGPointZero)) {
                     [attachment removeFromSuperView:self];
                 }else {

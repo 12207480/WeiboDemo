@@ -13,7 +13,7 @@
 
 @property(assign,nonatomic) BOOL isRetweeted;
 @property(strong,nonatomic)WBStatusModel *statusModel;
-@property (nonatomic, strong) TYTextRender *textContainer;
+@property (nonatomic, strong) TYTextRender *textRender;
 
 @property(strong,nonatomic)NSArray *emotionArray;//表情数组
 @property(strong,nonatomic)NSArray *atPersonArray;//at

@@ -173,8 +173,8 @@
 {
     WBHomeCellViewModel *retweetedViewModel=_homeCellViewModel.statusModel.retweeted_status;
     
-    [_contentAttributedLabel  setTextRender:_homeCellViewModel.textContainer];
-    [_retweetedAttributedLabel setTextRender:retweetedViewModel.textContainer];
+    [_contentAttributedLabel  setTextRender:_homeCellViewModel.textRender];
+    [_retweetedAttributedLabel setTextRender:retweetedViewModel.textRender];
     
     if(retweetedViewModel!=nil)
     {

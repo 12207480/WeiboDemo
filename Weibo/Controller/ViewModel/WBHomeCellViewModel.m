@@ -239,16 +239,13 @@
     text.ty_characterSpacing =0;
     text.ty_lineSpacing = 2;
     text.ty_font = _isRetweeted ? [UIFont systemFontOfSize:16]:[UIFont systemFontOfSize:17];
-//    text.ty_minimumLineHeight = 16;
-//    text.ty_maximumLineHeight = 16;
-//    text.ty_lineHeightMultiple = 1.0;
-    _textContainer = [[TYTextRender alloc]initWithAttributedText:text];
-    _textContainer.lineBreakMode = NSLineBreakByCharWrapping;
-    _textContainer.highlightBackgroudRadius = 5;
-    _textContainer.highlightBackgroudInset = UIEdgeInsetsMake(2, 0, 2, 1);
+    _textRender = [[TYTextRender alloc]initWithAttributedText:text];
+    _textRender.lineBreakMode = NSLineBreakByCharWrapping;
+    _textRender.highlightBackgroudRadius = 5;
+    _textRender.highlightBackgroudInset = UIEdgeInsetsMake(2, 0, 2, 1);
     CGFloat width = [UIScreen mainScreen].bounds.size.width-CELL_SIDEMARGIN*2;
-    _textContainer.size = CGSizeMake(width, [_textContainer textSizeWithRenderWidth:width].height+2);
-    _contentHeight =_textContainer.size.height;
+    _textRender.size = CGSizeMake(width, [_textRender textSizeWithRenderWidth:width].height+2);
+    _contentHeight =_textRender.size.height;
     
     self.atPersonArray=nil;
     self.emotionArray=nil;

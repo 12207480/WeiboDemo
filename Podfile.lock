@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.5.4):
-    - AFNetworking/NSURLConnection (= 2.5.4)
-    - AFNetworking/NSURLSession (= 2.5.4)
-    - AFNetworking/Reachability (= 2.5.4)
-    - AFNetworking/Security (= 2.5.4)
-    - AFNetworking/Serialization (= 2.5.4)
-    - AFNetworking/UIKit (= 2.5.4)
-  - AFNetworking/NSURLConnection (2.5.4):
+  - AFNetworking (2.6.3):
+    - AFNetworking/NSURLConnection (= 2.6.3)
+    - AFNetworking/NSURLSession (= 2.6.3)
+    - AFNetworking/Reachability (= 2.6.3)
+    - AFNetworking/Security (= 2.6.3)
+    - AFNetworking/Serialization (= 2.6.3)
+    - AFNetworking/UIKit (= 2.6.3)
+  - AFNetworking/NSURLConnection (2.6.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.4):
+  - AFNetworking/NSURLSession (2.6.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.4)
-  - AFNetworking/Security (2.5.4)
-  - AFNetworking/Serialization (2.5.4)
-  - AFNetworking/UIKit (2.5.4):
+  - AFNetworking/Reachability (2.6.3)
+  - AFNetworking/Security (2.6.3)
+  - AFNetworking/Serialization (2.6.3)
+  - AFNetworking/UIKit (2.6.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - DACircularProgress (2.3.1)
@@ -26,16 +26,17 @@ PODS:
     - DACircularProgress
     - pop
   - KMCGeigerCounter (0.2.2)
-  - MJRefresh (1.4.6)
-  - pop (1.0.7)
+  - MJRefresh (1.4.7)
+  - pop (1.0.10)
   - PureLayout (2.0.6)
-  - SDWebImage (3.7.2):
-    - SDWebImage/Core (= 3.7.2)
-  - SDWebImage/Core (3.7.2)
+  - SDWebImage (3.7.6):
+    - SDWebImage/Core (= 3.7.6)
+  - SDWebImage/Core (3.7.6)
   - SVProgressHUD (1.1.3)
   - Weibo (2.4.2)
 
 DEPENDENCIES:
+  - AFNetworking (~> 2.3)
   - IDMPhotoBrowser (~> 1.6.2)
   - KMCGeigerCounter (~> 0.2.0)
   - MJRefresh (~> 1.4.6)
@@ -45,15 +46,17 @@ DEPENDENCIES:
   - Weibo (~> 2.4.2)
 
 SPEC CHECKSUMS:
-  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   IDMPhotoBrowser: ebbfa6690456b72dd92d93b7bc11d71519f4d06d
   KMCGeigerCounter: f8cc3c4aa19fc6f8cec168fb03b364b84c118a7a
-  MJRefresh: 2eaa3fd8f67fbb86497840fb0167446f7eb61dc7
-  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
+  MJRefresh: 6b140993028fa30f1fcb88e82925a7c7911415cf
+  pop: 82ca6b068ce9278fd350fd9dd09482a0ce9492e6
   PureLayout: f25f0bb904d5ccfe6e31da3cb869185259f02e0d
-  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   Weibo: ed569ffed6eb043a159ac3b01dc5122b4e1fd77a
 
-COCOAPODS: 0.37.2
+PODFILE CHECKSUM: f2d2ccf4f61843bdf4075d622941d3e7f45c94a7
+
+COCOAPODS: 1.1.1

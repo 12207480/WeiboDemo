@@ -1,9 +1,0 @@
-CLANG_CXX_LANGUAGE_STANDARD = c++11
-CLANG_CXX_LIBRARY = libc++
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/DACircularProgress" "${PODS_ROOT}/Headers/Public/IDMPhotoBrowser" "${PODS_ROOT}/Headers/Public/KMCGeigerCounter" "${PODS_ROOT}/Headers/Public/MJRefresh" "${PODS_ROOT}/Headers/Public/PureLayout" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/SVProgressHUD" "${PODS_ROOT}/Headers/Public/Weibo" "${PODS_ROOT}/Headers/Public/pop"
-LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/Weibo/libWeiboSDK"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AFNetworking" -isystem "${PODS_ROOT}/Headers/Public/DACircularProgress" -isystem "${PODS_ROOT}/Headers/Public/IDMPhotoBrowser" -isystem "${PODS_ROOT}/Headers/Public/KMCGeigerCounter" -isystem "${PODS_ROOT}/Headers/Public/MJRefresh" -isystem "${PODS_ROOT}/Headers/Public/PureLayout" -isystem "${PODS_ROOT}/Headers/Public/SDWebImage" -isystem "${PODS_ROOT}/Headers/Public/SVProgressHUD" -isystem "${PODS_ROOT}/Headers/Public/Weibo" -isystem "${PODS_ROOT}/Headers/Public/pop"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"Pods-AFNetworking" -l"Pods-DACircularProgress" -l"Pods-IDMPhotoBrowser" -l"Pods-KMCGeigerCounter" -l"Pods-MJRefresh" -l"Pods-PureLayout" -l"Pods-SDWebImage" -l"Pods-SVProgressHUD" -l"Pods-pop" -l"WeiboSDK" -l"c++" -framework "CoreGraphics" -framework "ImageIO" -framework "MessageUI" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration"
-OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
-PODS_ROOT = ${SRCROOT}/Pods

@@ -80,7 +80,7 @@
     self.lineFragmentPadding = 0;
 }
 
-#pragma mark - getter setter
+#pragma mark - Getter && Setter
 
 - (void)setTextStorage:(NSTextStorage *)textStorage {
     _textStorage = textStorage;
@@ -183,7 +183,7 @@
     return _attachmentViewSet;
 }
 
-#pragma mark - public
+#pragma mark - Public
 
 - (NSRange)visibleGlyphRange {
     return [_layoutManager glyphRangeForTextContainer:_textContainer];
@@ -223,7 +223,7 @@
 
 - (NSInteger)characterIndexForPoint:(CGPoint)point{
     CGRect textRect = _textRectOnRender;
-    if (!CGRectContainsPoint(textRect, point)) {
+    if (!CGRectContainsPoint(textRect, point) && !_editable) {
         return -1;
     }
     CGPoint realPoint = CGPointMake(point.x - textRect.origin.x, point.y - textRect.origin.y);
